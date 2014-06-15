@@ -1,0 +1,26 @@
+{
+  "flagURL": {
+    "selector": "table.infobox td.maptable a:contains('Flag')",
+    "type": "link"
+  },
+  "flagImageURL": {
+    "selector": "table.infobox td.maptable a.image img[alt*='flag']",
+    "type": "attr",
+    "attr": "src"
+  },
+  "languageList": {
+    "selector": "div#p-lang ul li.interlanguage-link",
+    "type": "json-parser",
+    "config": {
+      "url": {
+        "selector": "a[lang]",
+        "type": "link"
+      },
+      "lang": {
+        "selector": "a[lang]",
+        "type": "attr",
+        "attr": "lang"
+      }
+    }
+  }
+}

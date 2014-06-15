@@ -1,0 +1,23 @@
+{
+  "name": "Peter Parker",
+  "author": {
+    "name": "John Hu",
+    "email": "im@john.hu"
+  },
+  "description": "A web spider app, it converts a page into a json object",
+  "version": "0.1.0",
+  "keywords": [
+    "html",
+    "jsdom",
+    "spider",
+    "crawler"
+  ],
+  "main": "./index.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "jsdom": "*",
+    "events": "*"
+  }
+}
