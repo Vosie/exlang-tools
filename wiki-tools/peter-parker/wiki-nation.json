@@ -1,4 +1,47 @@
 {
+  "wikiUrl": {
+    "type": "argv",
+    "index": 2
+  },
+  "countryName": {
+    "selector": "table.infobox span.country-name",
+    "type": "attr",
+    "attr": "textContent"
+  },
+  "name": {
+    "selector": "div[role='main'] .firstHeading > span",
+    "type": "attr",
+    "attr": "textContent"
+  },
+  "lang": {
+    "selector": "div[role='main'] .firstHeading",
+    "type": "attr",
+    "attr": "lang"
+  },
+  "smallMap": {
+    "selector": "table.infobox a.image img[alt*='map']",
+    "type": "attr",
+    "attr": "src"
+  },
+  "shortDesc": {
+    "selector": {
+      "base": "div[role='main'] .mw-body-content .toc",
+      "filter": "prevAll",
+      "subSelector": "p"
+    },
+    "type": "attrs",
+    "attr": "textContent"
+  },
+  "latitude": {
+    "selector": "div[role='main'] .mw-body-content .geo-dms .latitude",
+    "type": "attr",
+    "attr": "textContent"
+  },
+  "longitude": {
+    "selector": "div[role='main'] .mw-body-content .geo-dms .longitude",
+    "type": "attr",
+    "attr": "textContent"
+  },
   "flagURL": {
     "selector": "table.infobox td.maptable a:contains('Flag')",
     "type": "link"
@@ -8,18 +51,40 @@
     "type": "attr",
     "attr": "src"
   },
-  "languageList": {
+  "otherLanguages": {
     "selector": "div#p-lang ul li.interlanguage-link",
-    "type": "json-parser",
+    "type": "peter-parker",
+    "url": {
+      "selector": "a[lang]",
+      "type": "link"
+    },
+    "lang": {
+      "selector": "a[lang]",
+      "type": "attr",
+      "attr": "lang"
+    },
     "config": {
-      "url": {
-        "selector": "a[lang]",
-        "type": "link"
+      "wikiUrl": {
+        "type": "parent-field",
+        "field": "url"
+      },
+      "name": {
+        "selector": "div[role='main'] .firstHeading > span",
+        "type": "attr",
+        "attr": "textContent"
       },
       "lang": {
-        "selector": "a[lang]",
-        "type": "attr",
-        "attr": "lang"
+        "type": "parent-field",
+        "field": "lang"
+      },
+      "shortDesc": {
+        "selector": {
+          "base": "div[role='main'] .mw-body-content .toc",
+          "filter": "prevAll",
+          "subSelector": "p"
+        },
+        "type": "attrs",
+        "attr": "textContent"
       }
     }
   }

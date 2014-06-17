@@ -12,16 +12,27 @@ if (!config) {
   return;
 }
 
-var pp = require('./libs/PeterParker.js');
+var fs = require('fs');
+var pp = require('./libs/peter-parker.js');
 
 var peter = new pp.PeterParker();
+var parsed = null;
 
 peter.on('ready', function() {
-  console.log(JSON.stringify(peter.parse('', config)));
+  parsed = peter.parse('', config);
 });
 
 peter.on('error', function(e) {
   console.error('error: ', e);
+  process.exit(-3);
+});
+
+peter.on('done', function() {
+  if (process.argv[4]) {
+    fs.writeFile(process.argv[4], JSON.stringify(parsed));
+  } else {
+    console.log(JSON.stringify(parsed));
+  }
 });
 
 peter.init(process.argv[2]);
