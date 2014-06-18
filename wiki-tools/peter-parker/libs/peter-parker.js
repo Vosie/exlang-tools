@@ -45,12 +45,39 @@
     });
   };
 
+  proto._shouldRun = function pp_shouldRun(obj, key, cmd) {
+    switch(cmd.condition) {
+      case 'if-empty':
+        this._debug('if ' + key + ' is empty? [' + obj[key] + ']');
+        var result = obj[key] === null || (typeof(obj[key])) === "undefined" ||
+               obj[key] === '';
+        return result;
+      default:
+        return true;
+    }
+  };
+
+  proto._runSubParser = function pp__subParser(context, obj, key, subParsers) {
+    subParsers.forEach((function(child, idx) {
+      this._debug('check sub parser: #' + idx);
+      if (this._shouldRun(obj, key, child)) {
+        this._debug('run sub parser: #' + idx);
+        obj[key] = this.execute(context, child);
+      }
+    }).bind(this));
+  };
+
   proto._parseSingle = function pp__parseSingle(context, config) {
     var ret = {};
+    var cmd;
     for(var key in config) {
+      cmd = config[key];
       this._debug('build field: ' + key);
-      ret[key] = this.execute(context, config[key]);
+      ret[key] = this.execute(context, cmd);
       this._debug('field value: ' + ret[key]);
+      if (cmd.subParsers) {
+        this._runSubParser(context, ret, key, cmd.subParsers);
+      }
     }
     return ret;
   };

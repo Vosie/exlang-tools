@@ -112,3 +112,80 @@ Otherwise, it returns the parsed object directly.
   }
 }
 ```
+* peter-parker
+peter-parker spwan another Peter Parker to fetch the url and parse the content.
+
+```
+  "otherLanguages": {
+    "selector": "div#p-lang ul li.interlanguage-link",
+    "type": "peter-parker",
+    "url": {
+      "selector": "a[lang]",
+      "type": "link"
+    },
+    "lang": {
+      "selector": "a[lang]",
+      "type": "attr",
+      "attr": "lang"
+    },
+    "config": {
+      "wikiUrl": {
+        "type": "parent-field",
+        "field": "url"
+      },
+      "name": {
+        "selector": "div[role='main'] .firstHeading > span",
+        "type": "attr",
+        "attr": "textContent"
+      },
+      "lang": {
+        "type": "parent-field",
+        "field": "lang"
+      },
+      "shortDesc": {
+        "selector": {
+          "base": "div[role='main'] .mw-body-content .toc",
+          "filter": "prevAll",
+          "subSelector": "p"
+        },
+        "type": "attrs",
+        "attr": "textContent"
+      }
+    }
+  }
+```
+
+Selector Field
+------------------------
+The selector field supports simple selector, the css selector, or complex
+selector, like the followig example:
+```
+  "selector": {
+    "base": "div[role='main'] .mw-body-content .toc",
+    "filter": "prevAll",
+    "subSelector": "p"
+  },
+```
+The following is the difinition of each field of complex selector:
+* base: It is the base location
+* filter: It is the filer applied to the base object. It's the name of jquery's
+tree traversal API, like prevAll.
+* subSelector: If filter needs an argument as selector, you may specify here.
+
+Conditional Command
+------------------------
+If there are two commands applied to the same field, Peter Parker supports
+conditional command. We can put the "condition" field in command definition,
+like:
+
+```
+"shortDesc": {
+  "condition": "if-empty",
+  "selector": "div[role='main'] .mw-body-content p",
+  "type": "attrs",
+  "attr": "textContent"
+}
+```
+
+Peter Parker currently only supports "if-empty" condition. It executes only if
+the key field, it is "shortDesc" in this case, is null or undefined.

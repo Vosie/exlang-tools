@@ -35,7 +35,7 @@
 
   proto._getIndex = function pp__getIndex(query, args, index) {
     var got = this[query].apply(this, args);
-    if (index < got.length && index > -1) {
+    if (got && index < got.length && index > -1) {
       return got[index];
     } else {
       return null;

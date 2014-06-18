@@ -12,17 +12,21 @@
   proto.constructor = AttributeParser;
 
   proto.queryAttrs = function ap_queryAttrs(context, selectors, attr) {
-    var ret = [];
     var queryResult = utils.query(this._$, context, selectors);
     this._debug('query result: ' + queryResult.length);
-    queryResult.each((function(idx, item) {
-      if (item[attr]) {
-        ret[ret.length] = item[attr];
-      } else if (item.hasAttribute(attr)) {
-        ret[ret.length] = item.getAttribute(attr).nodeValue;
-      }
-    }).bind(this));
-    return ret;
+    if (queryResult.length) {
+      var ret = [];
+      queryResult.each((function(idx, item) {
+        if (item[attr]) {
+          ret[ret.length] = item[attr];
+        } else if (item.hasAttribute(attr)) {
+          ret[ret.length] = item.getAttribute(attr).nodeValue;
+        }
+      }).bind(this));
+      return ret;
+    } else {
+      return null;
+    }
   };
 
   proto.queryAttr = function ap_queryAttr(context, selectors, attr, index) {
