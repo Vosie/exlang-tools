@@ -33,6 +33,7 @@ peter.on('done', function() {
   } else {
     console.log(JSON.stringify(parsed));
   }
+  peter.free();
 });
 
 peter.init(process.argv[2]);

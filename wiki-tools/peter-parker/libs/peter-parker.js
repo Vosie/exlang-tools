@@ -95,33 +95,61 @@
     var task = this._unprocessed.pop();
     var self = this;
     var pp = new PeterParker();
-    pp.on('ready', function() {
-      self._debug('spawn, peter parker is ready.');
-      task.result = pp.parse('', task.cmd.config);
-    });
-
-    pp.on('done', function() {
-      // the result will always be object because we don't supply context to
-      // parse function.
-      utils.clone(task.result, task.ret);
-      self._runPostCommands(task.ret, task.prefetched, task.cmd.config);
-      if (self._unprocessed.length === 0) {
-        self.emit('done');
-      } else {
-        self._debug('spawn, sleep ' + PeterParker.SLEEP_TIMER + ' ms for next');
-        setTimeout(function() {
-          self._processTask();
-        }, PeterParker.SLEEP_TIMER)
+    var handlers = {
+      'ready': function() {
+        self._debug('spawn, peter parker is ready.');
+        task.result = pp.parse('', task.cmd.config);
+        delete handlers.ready;
+      },
+      'done': function() {
+        // the result will always be object because we don't supply context to
+        // parse function.
+        utils.clone(task.result, task.ret);
+        self._runPostCommands(task.ret, task.prefetched, task.cmd.config);
+        if (self._unprocessed.length === 0) {
+          self.emit('done');
+          handlers.free();
+          self = null;
+        } else {
+          self._debug('spawn, sleep ' + PeterParker.SLEEP_TIMER +
+                      ' ms for next');
+          handlers.free();
+          setTimeout(function() {
+            self._processTask();
+            self = null;
+          }, PeterParker.SLEEP_TIMER)
+        }
+      },
+      'error': function(e) {
+        self.emit('error', e);
+      },
+      'free': function() {
+        // remove event listeners
+        pp.removeListener('error', handlers.error);
+        pp.removeListener('done', handlers.done);
+        pp.free();
+        // free variables so that the spawned peter parker will be released.
+        handlers = null;
+        pp = null;
+        task = null;
       }
-    });
-
-    pp.on('error', function(e) {
-      self.emit('error', e);
-    });
+    }
+    // hook event listeners
+    pp.once('ready', handlers.ready);
+    pp.addListener('done', handlers.done);
+    pp.addListener('error', handlers.error);
     pp.init(task.prefetched.url);
   };
 
-  // TODO: write the sendPeterParker as a queue and limited by MAXIMUM_SPAWNED_CHILD.
+  proto.free = function pp_free() {
+    this._window.close();
+    delete this._window;
+    delete this._$;
+    if (global.gc) {
+      global.gc();
+    }
+  };
+
   proto._sendPeterParker = function pp_sendChild(context, cmd) {
     var task = {
       'prefetched': {},
