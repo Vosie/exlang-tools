@@ -27,10 +27,17 @@
     "selector": {
       "base": "div[role='main'] .mw-body-content .toc",
       "filter": "prevAll",
-      "subSelector": "p"
+      "subSelector": "p",
+      "reverse": true
     },
     "type": "attrs",
-    "attr": "textContent"
+    "attr": "textContent",
+    "subParsers": [{
+      "condition": "if-empty",
+      "selector": "div[role='main'] .mw-body-content p",
+      "type": "attrs",
+      "attr": "textContent"
+    }]
   },
   "latitude": {
     "selector": "div[role='main'] .mw-body-content .geo-dms .latitude",
@@ -81,10 +88,17 @@
         "selector": {
           "base": "div[role='main'] .mw-body-content .toc",
           "filter": "prevAll",
-          "subSelector": "p"
+          "subSelector": "p",
+          "reverse": true
         },
         "type": "attrs",
-        "attr": "textContent"
+        "attr": "textContent",
+        "subParsers": [{
+          "condition": "if-empty",
+          "selector": "div[role='main'] .mw-body-content p",
+          "type": "attrs",
+          "attr": "textContent"
+        }]
       }
     }
   }
